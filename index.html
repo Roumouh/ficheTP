@@ -3,62 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة إنشاء خطة الدرس</title>
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <title>تعبئة نموذج الإكسل الجاهز</title>
+    
+    <!-- استدعاء مكتبة ExcelJS القوية للحفاظ على التنسيقات -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
     
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #f4f4f9; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #f4f4f9; text-align: right; }
         .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
         input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        button { width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #218838; }
+        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-top: 15px; }
+        button:hover { background-color: #0056b3; }
+        .note { font-size: 12px; color: #666; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>تعبئة بيانات خطة الدرس 📝</h2>
-    <form id="courseForm">
-        <label>المقياس / المادة (مثال: معلوماتية - Word):</label>
-        <input type="text" id="moduleName" placeholder="أدخل اسم المادة" required>
+    <h2>تعبئة القالب الجاهز 📊</h2>
+    <form id="dataForm">
+        <label>اسم المادة / المقياس:</label>
+        <input type="text" id="inputModule" placeholder="مثال: معلوماتية" required>
 
-        <label>الحجم الساعي (مثال: 238 ساعة):</label>
-        <input type="text" id="duration" placeholder="أدخل الحجم الساعي" required>
+        <label>الحجم الساعي الكامل:</label>
+        <input type="text" id="inputHours" placeholder="مثال: 238 ساعة" required>
 
-        <label>عنوان الدرس:</label>
-        <input type="text" id="lessonTitle" placeholder="أدخل عنوان الدرس" required>
+        <label>اسم الأستاذ / المكون:</label>
+        <input type="text" id="inputTeacher" placeholder="أدخل اسمك هنا" required>
 
-        <button type="button" onclick="generateExcel()">تحميل ملف الإكسل 📥</button>
+        <button type="button" onclick="modifyExistingExcel()">توليد الملف المنسق 📥</button>
     </form>
+    <p class="note">* ملاحظة: يجب رفع ملف باسم template.xlsx في نفس المجلد على GitHub لتنجح العملية.</p>
 </div>
 
 <script>
-    function generateExcel() {
-        // 1. جلب البيانات من الواجهة
-        var moduleName = document.getElementById("moduleName").value;
-        var duration = document.getElementById("duration").value;
-        var lessonTitle = document.getElementById("lessonTitle").value;
+    async function modifyExistingExcel() {
+        // 1. جلب المدخلات من الواجهة
+        const moduleVal = document.getElementById("inputModule").value;
+        const hoursVal = document.getElementById("inputHours").value;
+        const teacherVal = document.getElementById("inputTeacher").value;
 
-        if(!moduleName || !duration || !lessonTitle) {
+        if(!moduleVal || !hoursVal || !teacherVal) {
             alert("الرجاء ملء جميع الحقول أولاً!");
             return;
         }
 
-        // 2. تجهيز البيانات في شكل مصفوفة (الصفوف والأعمدة)
-        var data = [
-            ["المقياس", "الحجم الساعي", "عنوان الدرس"], // صف العناوين
-            [moduleName, duration, lessonTitle]         // صف البيانات المدخلة
-        ];
+        try {
+            // 2. جلب ملف الإكسل المصمم مسبقاً والمرفوع على GitHub
+            // تأكد أن اسم الملف مطابقت تماماً لـ template.xlsx
+            const response = await fetch('template.xlsx');
+            if (!response.ok) throw new Error("لم يتم العثور على ملف template.xlsx في المستودع!");
+            
+            const arrayBuffer = await response.arrayBuffer();
 
-        // 3. إنشاء ملف إكسل جديد (Workbook) وورقة عمل (Worksheet)
-        var workbook = XLSX.utils.book_new();
-        var worksheet = XLSX.utils.aoa_to_sheet(data);
+            // 3. قراءة الملف عبر مكتبة ExcelJS
+            const workbook = new ExcelJS.Workbook();
+            await workbook.xlsx.load(arrayBuffer);
 
-        // 4. إضافة ورقة العمل إلى الملف
-        XLSX.utils.book_append_sheet(workbook, worksheet, "خطة الدرس");
+            // 4. اختيار ورقة العمل الأولى
+            const worksheet = workbook.getWorksheet(1); 
 
-        // 5. تحميل الملف إلى جهاز المستخدم
-        XLSX.writeFile(workbook, "Plan_De_Lecon.xlsx");
+            // 5. إسقاط البيانات في خلايا محددة (قم بتعديل الأحرف والأرقام لتطابق ملفك)
+            worksheet.getCell('B3').value = moduleVal;  // نضع اسم المادة في الخلية B3
+            worksheet.getCell('D3').value = hoursVal;   // نضع الحجم الساعي في الخلية D3
+            worksheet.getCell('B4').value = teacherVal; // نضع اسم الأستاذ في الخلية B4
+
+            // 6. توليد الملف الجديد وتحميله للمستخدم
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Document_Final.xlsx'; // اسم الملف عند تحميله
+            link.click();
+
+        } catch (error) {
+            alert("حدث خطأ: " + error.message);
+            console.error(error);
+        }
     }
 </script>
 
