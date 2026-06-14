@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة إنشاء خطة الدرس</title>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #f4f4f9; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>تعبئة بيانات خطة الدرس 📝</h2>
+    <form id="courseForm">
+        <label>المقياس / المادة (مثال: معلوماتية - Word):</label>
+        <input type="text" id="moduleName" placeholder="أدخل اسم المادة" required>
+
+        <label>الحجم الساعي (مثال: 238 ساعة):</label>
+        <input type="text" id="duration" placeholder="أدخل الحجم الساعي" required>
+
+        <label>عنوان الدرس:</label>
+        <input type="text" id="lessonTitle" placeholder="أدخل عنوان الدرس" required>
+
+        <button type="button" onclick="generateExcel()">تحميل ملف الإكسل 📥</button>
+    </form>
+</div>
+
+<script>
+    function generateExcel() {
+        // 1. جلب البيانات من الواجهة
+        var moduleName = document.getElementById("moduleName").value;
+        var duration = document.getElementById("duration").value;
+        var lessonTitle = document.getElementById("lessonTitle").value;
+
+        if(!moduleName || !duration || !lessonTitle) {
+            alert("الرجاء ملء جميع الحقول أولاً!");
+            return;
+        }
+
+        // 2. تجهيز البيانات في شكل مصفوفة (الصفوف والأعمدة)
+        var data = [
+            ["المقياس", "الحجم الساعي", "عنوان الدرس"], // صف العناوين
+            [moduleName, duration, lessonTitle]         // صف البيانات المدخلة
+        ];
+
+        // 3. إنشاء ملف إكسل جديد (Workbook) وورقة عمل (Worksheet)
+        var workbook = XLSX.utils.book_new();
+        var worksheet = XLSX.utils.aoa_to_sheet(data);
+
+        // 4. إضافة ورقة العمل إلى الملف
+        XLSX.utils.book_append_sheet(workbook, worksheet, "خطة الدرس");
+
+        // 5. تحميل الملف إلى جهاز المستخدم
+        XLSX.writeFile(workbook, "Plan_De_Lecon.xlsx");
+    }
+</script>
+
+</body>
+</html>
