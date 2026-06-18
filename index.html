@@ -23,7 +23,16 @@
         <input type="text" id="inputSem" placeholder="ادخل رقم السداسي الحالي" required>
         <label>اسم الفرع:</label>
         <input type="text" id="inputSec" placeholder="أدخل اسم التخصص" required>
-              <button type="button" onclick="modifyExistingExcel()">تسجيـــــــل    📥</button>
+
+        <label>رقم الأسبوع :</label>
+        <input type="text" id="inputSema" 
+        <label>  رقم الدرس:</label>
+        <input type="text" id="inputCo" 
+        <label>تاريخ بداية الأسبوع :</label>
+        <input type="text" id="inputSd"
+        <label>تاريخ نهاية الأسبوع :</label>
+        <input type="text" id="inputSf"
+       <button type="button" onclick="modifyExistingExcel()">تسجيـــــــل    📥</button>
     </form>
 </div>
 <script>
@@ -31,7 +40,17 @@
         const StgVal = document.getElementById("inputStg").value;
         const SemVal = document.getElementById("inputSem").value;
         const SecVal = document.getElementById("inputSec").value;
-        if(!StgVal || !SemVal || !SecVal) {
+        const SemaVal = document.getElementById("inputSema").value;
+        const CoVal = document.getElementById("inputCo").value;
+        const SfVal = document.getElementById("inputSf").value;
+
+
+
+
+
+
+     
+        if(!StgVal || !SemVal || !SecVal ||  !SemaVal || !CoVal || !SfVal    ) {
             alert("الرجاء ملء جميع الحقول أولاً!");
             return;
         }
