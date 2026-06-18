@@ -23,7 +23,6 @@
         <input type="text" id="inputSem" placeholder="ادخل رقم السداسي الحالي" required>
         <label>اسم الفرع:</label>
         <input type="text" id="inputSec" placeholder="أدخل اسم التخصص" required>
-
         <label>رقم الأسبوع :</label>
         <input type="text" id="inputSema" 
         <label>  رقم الدرس:</label>
@@ -78,8 +77,7 @@
             worksheet.getCell('l15').value = CoVal;
          worksheet.getCell('n11').value = SdVal; 
             worksheet.getCell('n18').value = SfVal; 
-
-        
+       
             // توليد وتحميل الملف النهائي
             const buffer = await workbook.xlsx.writeBuffer();
             const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
