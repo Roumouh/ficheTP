@@ -42,6 +42,7 @@
         const SecVal = document.getElementById("inputSec").value;
         const SemaVal = document.getElementById("inputSema").value;
         const CoVal = document.getElementById("inputCo").value;
+       const SdVal = document.getElementById("inputSd").value;
         const SfVal = document.getElementById("inputSf").value;
 
 
@@ -50,7 +51,7 @@
 
 
      
-        if(!StgVal || !SemVal || !SecVal ||  !SemaVal || !CoVal || !SfVal    ) {
+        if(!StgVal || !SemVal || !SecVal ||  !SemaVal || !CoVal || !SdVal || !SfVal   ) {
             alert("الرجاء ملء جميع الحقول أولاً!");
             return;
         }
@@ -73,6 +74,12 @@
             worksheet.getCell('D2').value = StgVal;  
             worksheet.getCell('H2').value = SemVal;   
             worksheet.getCell('C3').value = SecVal; 
+                 worksheet.getCell('m3').value = SemaVal;  
+            worksheet.getCell('l15').value = CoVal;
+         worksheet.getCell('n11').value = SdVal; 
+            worksheet.getCell('n18').value = SfVal; 
+
+        
             // توليد وتحميل الملف النهائي
             const buffer = await workbook.xlsx.writeBuffer();
             const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
