@@ -63,9 +63,9 @@
             }
 
             // إسقاط البيانات في الخلايا (تأكد من مطابقة الرموز لملفك)
-            worksheet.getCell('B3').value = StgVal;  
-            worksheet.getCell('D3').value = SemVal;   
-            worksheet.getCell('B4').value = Secval; 
+            worksheet.getCell('D2').value = StgVal;  
+            worksheet.getCell('H2').value = SemVal;   
+            worksheet.getCell('C3').value = Secval; 
 
             // توليد وتحميل الملف النهائي
             const buffer = await workbook.xlsx.writeBuffer();
