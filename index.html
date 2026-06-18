@@ -19,13 +19,14 @@
     <h2>ورقة تنقيط الأعمال التطبيقية TP 📊</h2>
     <form id="dataForm">
         <label>اسم المتربص:</label>
-        <input type="text" id="inputModule" placeholder="أدخل اللقب و الاسم الكاملين" required>
+        <input type="text" id="inputStg" placeholder="أدخل اللقب و الاسم الكاملين" required>
 
         <label>السداسي رقم:</label>
-        <input type="text" id="inputHours" placeholder="ادخل رقم السداسي الحالي" required>
+        <input type="text" id="inputSem" placeholder="ادخل رقم السداسي الحالي" required>
 
         <label>اسم الفرع:</label>
-        <input type="text" id="inputTeacher" placeholder="أدخل اسم التخصص" required>
+        <input type="text" id="inputSec" placeholder="أدخل اسم التخصص" required>
+        
 
         <button type="button" onclick="modifyExistingExcel()">تسجيـــــــل    📥</button>
     </form>
@@ -33,9 +34,9 @@
 
 <script>
     async function modifyExistingExcel() {
-        const moduleVal = document.getElementById("inputModule").value;
-        const hoursVal = document.getElementById("inputHours").value;
-        const teacherVal = document.getElementById("inputTeacher").value;
+        const moduleVal = document.getElementById("inputStg").value;
+        const hoursVal = document.getElementById("inputSem").value;
+        const teacherVal = document.getElementById("inputSec").value;
 
         if(!moduleVal || !hoursVal || !teacherVal) {
             alert("الرجاء ملء جميع الحقول أولاً!");
@@ -62,9 +63,9 @@
             }
 
             // إسقاط البيانات في الخلايا (تأكد من مطابقة الرموز لملفك)
-            worksheet.getCell('B3').value = moduleVal;  
-            worksheet.getCell('D3').value = hoursVal;   
-            worksheet.getCell('B4').value = teacherVal; 
+            worksheet.getCell('B3').value = StgVal;  
+            worksheet.getCell('D3').value = SemVal;   
+            worksheet.getCell('B4').value = Secval; 
 
             // توليد وتحميل الملف النهائي
             const buffer = await workbook.xlsx.writeBuffer();
