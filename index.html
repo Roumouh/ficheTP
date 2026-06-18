@@ -1,87 +1,50 @@
-<!DOCTYPE html>
-<html dir="rtl" lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تعبئة نموذج الإكسل الجاهز</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #f4f4f9; text-align: right; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-top: 15px; }
-        button:hover { background-color: #0056b3; }
-    </style>
-</head>
-<body>
+async function modifyExistingExcel() {
+    // 1. Récupération des valeurs avec des noms de variables clairs
+    const stgVal = document.getElementById("inputStg").value;
+    const semVal = document.getElementById("inputSem").value;
+    const secVal = document.getElementById("inputSec").value;
 
-<div class="container">
-    <h2>ورقة تنقيط الأعمال التطبيقية TP 📊</h2>
-    <form id="dataForm">
-        <label>اسم المتربص:</label>
-        <input type="text" id="inputStg" placeholder="أدخل اللقب و الاسم الكاملين" required>
-
-        <label>السداسي رقم:</label>
-        <input type="text" id="inputSem" placeholder="ادخل رقم السداسي الحالي" required>
-
-        <label>اسم الفرع:</label>
-        <input type="text" id="inputSec" placeholder="أدخل اسم التخصص" required>
-        
-
-        <button type="button" onclick="modifyExistingExcel()">تسجيـــــــل    📥</button>
-    </form>
-</div>
-
-<script>
-    async function modifyExistingExcel() {
-        const moduleVal = document.getElementById("inputStg").value;
-        const hoursVal = document.getElementById("inputSem").value;
-        const teacherVal = document.getElementById("inputSec").value;
-
-        if(!StgVal || !SemVal || !SecVal) {
-            alert("الرجاء ملء جميع الحقول أولاً!");
-            return;
-        }
-
-        try {
-            // جلب الملف مع إضافة تكتيك لمنع التخزين المؤقت (Cache البراوزر) لضمان جلب أحدث ملف
-            const response = await fetch('template.xlsx?v=' + new Date().getTime());
-            
-            // صمام الأمان: التحقق من أن الاستجابة ناجحة وليست صفحة 404
-            if (!response.ok) {
-                throw new Error("لم يتم العثور على ملف template.xlsx. تأكد من رفعه في نفس مسار index.html بنفس الاسم تماماً.");
-            }
-            
-            const arrayBuffer = await response.arrayBuffer();
-            const workbook = new ExcelJS.Workbook();
-            await workbook.xlsx.load(arrayBuffer);
-
-            // الطريقة الآمنة لفتح أول ورقة عمل (Sheet) في الملف
-            const worksheet = workbook.worksheets[0]; 
-            if (!worksheet) {
-                throw new Error("الملف مفتوح ولكنه فارغ تماماً ولا يحتوي على أي ورقة عمل (Sheet).");
-            }
-
-            // إسقاط البيانات في الخلايا (تأكد من مطابقة الرموز لملفك)
-            worksheet.getCell('D2').value = StgVal;  
-            worksheet.getCell('H2').value = SemVal;   
-            worksheet.getCell('C3').value = SecVal; 
-
-            // توليد وتحميل الملف النهائي
-            const buffer = await workbook.xlsx.writeBuffer();
-            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'Document_Final.xlsx'; 
-            link.click();
-
-        } catch (error) {
-            alert("حدث خطأ أثناء المعالجة:\n" + error.message);
-            console.error(error);
-        }
+    // 2. Vérification si les champs sont vides
+    if(!stgVal || !semVal || !secVal) {
+        alert("الرجاء ملء جميع الحقول أولاً!");
+        return;
     }
-</script>
 
-</body>
-</html>
+    try {
+        // جلب الملف مع إضافة تكتيك لمنع التخزين المؤقت (Cache البراوزر) لضمان جلب أحدث ملف
+        const response = await fetch('template.xlsx?v=' + new Date().getTime());
+        
+        // صمام الأمان: التحقق من أن الاستجابة ناجحة وليست صفحة 404
+        if (!response.ok) {
+            throw new Error("لم يتم العثور على ملف template.xlsx. تأكد من رفعه في نفس مسار index.html بنفس الاسم تماماً.");
+        }
+        
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(arrayBuffer);
+
+        // الطريقة الآمنة لفتح أول ورقة عمل (Sheet) في الملف
+        const worksheet = workbook.worksheets[0]; 
+        if (!worksheet) {
+            throw new Error("الملف مفتوح ولكنه فارغ تماماً ولا يحتوي على أي ورقة عمل (Sheet).");
+        }
+
+        // 3. إسقاط البيانات في الخلايا باستخدام Variables الصحيحة
+        worksheet.getCell('D2').value = stgVal;  
+        worksheet.getCell('H2').value = semVal;   
+        worksheet.getCell('C3').value = secVal; 
+
+        // توليد وتحميل الملف النهائي
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'Document_Final.xlsx'; 
+        link.click();
+
+    } catch (error) {
+        alert("حدث خطأ أثناء المعالجة:\n" + error.message);
+        console.error(error);
+    }
+}
