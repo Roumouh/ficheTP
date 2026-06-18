@@ -65,14 +65,14 @@
 
     async function modifyExistingExcel() {
 
-        const moduleVal = document.getElementById("inputStg").value;
+        const StgVal = document.getElementById("inputStg").value;
 
-        const hoursVal = document.getElementById("inputSem").value;
+        const SemVal = document.getElementById("inputSem").value;
 
-        const teacherVal = document.getElementById("inputSec").value;
+        const SecVal = document.getElementById("inputSec").value;
 
 
-        if(!moduleVal || !hoursVal || !teacherVal) {
+        if(!StgVal || !SemVal || !SecVal) {
 
             alert("الرجاء ملء جميع الحقول أولاً!");
 
@@ -123,7 +123,7 @@
 
             worksheet.getCell('H2').value = SemVal;   
 
-            worksheet.getCell('C3').value = Secval; 
+            worksheet.getCell('C3').value = SecVal; 
 
 
             // توليد وتحميل الملف النهائي
